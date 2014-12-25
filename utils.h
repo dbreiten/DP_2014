@@ -26,6 +26,10 @@
 #define INPUT_IS_TOO_LONG 1
 #define INPUT_IS_PRIME 2
 
+// Debug
+#define UTILS_DEBUG_PRINT
+//#define UTILS_DEBUG_PRINT_POLLARD_RHO
+
 /******************************************************************************
 ** ENUMS                                                                     **
 ******************************************************************************/
@@ -53,5 +57,7 @@ progData_t *ParseArgs(int argCnt, char **args);
 unsigned char *CheckNumber(char *str);
 
 uint16_t DecNumToBinNum(uint8_t *decNum, uint16_t digitCnt, uint64_t *binNum);
+
+void Pollard_rho_method_GMP(mpz_t res, mpz_t N);
 
 #endif

@@ -12,12 +12,9 @@
 /*********************************************************************************
 ** TODO List
 **
-** C++ !!!!!!!!!!!!!!!!
 ** SIQS
 ** Single Large Prime Variation
 ** Lanczos matrix
-** Test prvociselnosti
-** Pro mala pouzit jinou faktorizaci
 ** Pro test B-smooth detekovat kandidaty na zaklade velkych prvocisel
 ** z faktorizacni baze. Tim se vyeliminuje mnoho relaci a na tech, co zbydou,
 ** pouzit bernsteina (primes 139)
@@ -45,33 +42,21 @@ using namespace std;
 
 int main(int argc, char **argv) {
 	progData_t    *progData;
-	uint16_t      digitCnt;
 	bool primalityCheck = true; // TODO: udelat jako argument
+	bool verbose        = true; // TODO: udelat jako argument
 
 	uint8_t primalityResult;
-	//result = FermatPrimalityTest(15485761);
 
-	//uint64_t result = Euklid_algorithm(50, 15);
-
-	// Ziskani nastaveni zadane uzivatelem
-	/* TODO: Dokoncit!!! */
-
-	//progData = ParseArgs(argc, argv);
-
-	//Assuming input is correct
-	//digitCnt = strlen(progData->inputNumStr);
-
-	/******************************************************************************
-	** GMP                                                                       **
-	******************************************************************************/
-
-	//char inputStr[1025];
 	string inputStr;
 
 
 	// mpz_t is the type defined for GMP integers.
 	// It is a pointer to the internals of the GMP integer data structure
 	mpz_t n;
+	mpz_t f1;     // Only for tests
+	mpz_t f2;     // Only for tests
+	mpz_t fake_n; // Only for tests
+	mpz_t res;
 	int flag;
 
 	cout << "Enter your number: " << endl;
@@ -85,7 +70,15 @@ int main(int argc, char **argv) {
 
 	// Initialize the number
 	mpz_init(n);
+	mpz_init(f1);
+	mpz_init(f2);
+	mpz_init(fake_n);
+	mpz_init(res);
 	mpz_set_ui(n, 0);
+	mpz_set_ui(f1, 961748941);
+	mpz_set_ui(f2, 982451653);
+	mpz_set_ui(fake_n, 0);
+	mpz_set_ui(res, 0);
 
 	// Parse the input string as a base 10 number
 	flag = mpz_set_str(n, inputStr.c_str(), 10);
@@ -107,38 +100,22 @@ int main(int argc, char **argv) {
 
 	// If the input is too small, factor with Pollard rho method else SIQS
 	if(inputStr.length() <= 30) {
-		;
+		Pollard_rho_method_GMP(res, n);
 	} else {
 		;
 	}
 
-	/* 3. Add one to the number */
-
-	mpz_add_ui(n, n, 1); /* n = n + 1 */
-
-	/* 4. Print the result */
-
-	cout << " n +1 = ";
-	mpz_out_str(stdout, 10, n);
+	// Print result
+	cout << "Result = ";
+	mpz_out_str(stdout, 10, res);
 	cout << endl;
 
-
-	/* 5. Square n+1 */
-
-	mpz_mul(n, n, n); /* n = n * n */
-
-
-	cout << " (n +1)^2 = ";
-	mpz_out_str(stdout, 10, n);
-	cout << "\n";
-
-
-	/* 6. Clean up the mpz_t handles or else we will leak memory */
+	/* Clean up the mpz_t handles or else we will leak memory */
 	mpz_clear(n);
+	mpz_clear(f1);
+	mpz_clear(f2);
+	mpz_clear(fake_n);
+	mpz_clear(res);
 
-	/******************************************************************************
-	** GMP                                                                       **
-	******************************************************************************/
-
-	return 0;
+	return OK;
 }
